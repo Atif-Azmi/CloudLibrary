@@ -1,0 +1,209 @@
+/* ==========================================================
+   CloudLibrary - Modern Stylesheet for College Cloud Project
+   ========================================================== */
+
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --secondary-color: #0f172a;
+  --accent-color: #38bdf8;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --bg-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* Navbar */
+.navbar-custom {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: 1.35rem;
+}
+
+.cloud-tag {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-weight: 600;
+}
+
+/* Cards & Surfaces */
+.card-custom {
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-custom:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+}
+
+/* Hero Section */
+.hero-banner {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: white;
+  border-radius: 18px;
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+/* Stat Cards */
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stat-icon-blue { background: #dbeafe; color: #2563eb; }
+.stat-icon-green { background: #d1fae5; color: #10b981; }
+.stat-icon-amber { background: #fef3c7; color: #d97706; }
+.stat-icon-red { background: #fee2e2; color: #ef4444; }
+.stat-icon-purple { background: #ede9fe; color: #7c3aed; }
+
+/* Buttons */
+.btn-primary-custom {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.55rem 1.25rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-dark);
+  color: white;
+}
+
+/* Badges */
+.badge-available {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+  font-weight: 500;
+}
+
+.badge-out-of-stock {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  font-weight: 500;
+}
+
+.badge-borrowed {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.badge-overdue {
+  background-color: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  animation: pulse-slow 2s infinite;
+}
+
+.badge-returned {
+  background-color: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+/* Custom Tables */
+.table-custom {
+  vertical-align: middle;
+}
+
+.table-custom thead th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+/* Footer */
+footer {
+  background-color: #0f172a;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding: 2.5rem 0 1.5rem 0;
+  margin-top: 4rem;
+  border-top: 1px solid #1e293b;
+}
+
+footer a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Architecture Pill */
+.arch-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}

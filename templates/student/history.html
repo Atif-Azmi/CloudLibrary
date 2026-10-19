@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Borrowing History{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <h2 class="font-heading mb-1" style="font-size: clamp(1.3rem, 3vw, 1.75rem);">Borrowing history</h2>
+        <p class="text-secondary small mb-0">Complete historical timeline of your textbook loans, due dates, and return records.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn-neo-secondary small">
+            <i class="bi bi-speedometer2"></i> Back to dashboard
+        </a>
+    </div>
+</div>
+
+<div class="table-card">
+    {% if history %}
+        <div class="table-scroll">
+            <table class="neo-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Book title</th>
+                        <th>Category</th>
+                        <th>Issue date</th>
+                        <th>Due date</th>
+                        <th>Return date</th>
+                        <th>Status</th>
+                        <th>Late fee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in history %}
+                        <tr>
+                            <td class="text-secondary small">#{{ row.id }}</td>
+                            <td>
+                                <div class="fw-bold" style="overflow-wrap: anywhere;">{{ row.title }}</div>
+                                <div class="text-secondary small">By {{ row.author }} &bull; ISBN: <code>{{ row.isbn }}</code></div>
+                            </td>
+                            <td>
+                                <span class="neo-chip">
+                                    <span class="neo-chip-dot" style="background-color: var(--surface-dark);"></span>
+                                    <span>{{ row.category }}</span>
+                                </span>
+                            </td>
+                            <td>{{ row.issue_date.strftime('%b %d, %Y') }}</td>
+                            <td>{{ row.due_date.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                {% if row.return_date %}
+                                    <span><i class="bi bi-check2 text-success me-1"></i>{{ row.return_date.strftime('%b %d, %Y') }}</span>
+                                {% else %}
+                                    <span class="text-secondary fst-italic">Currently on loan</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.status == 'returned' %}
+                                    <span class="neo-chip neo-chip-returned">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>Returned</span>
+                                    </span>
+                                {% elif row.status == 'overdue' %}
+                                    <span class="neo-chip neo-chip-overdue">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>Overdue</span>
+                                    </span>
+                                {% else %}
+                                    <span class="neo-chip neo-chip-borrowed">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>Active loan</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.fine_amount > 0 %}
+                                    <span class="fw-bold" style="color: var(--accent-red);">Rs {{ "%.2f"|format(row.fine_amount) }}</span>
+                                {% else %}
+                                    <span class="text-secondary small">Rs 0.00</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2.5rem 1rem;">
+            <div class="neo-stat-icon-wrapper" style="width: 50px; height: 50px; margin: 0 auto 1rem auto; font-size: 1.35rem;">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <h4 class="font-heading mb-1" style="font-size: 1.25rem;">No borrowing history yet</h4>
+            <p class="text-secondary small mb-3">Your past book loans and return timestamps will appear here.</p>
+            <a href="{{ url_for('student_books') }}" class="btn-neo-primary small">
+                <i class="bi bi-bookmark-plus"></i> Borrow your first book
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+[Unit]
+Description=Gunicorn instance to serve CloudLibrary Flask Application
+After=network.target
+
+[Service]
+# User and Group to run the service
+User=ubuntu
+Group=ubuntu
+
+# Application directory on EC2
+WorkingDirectory=/home/ubuntu/library-system
+
+# Load environment variables (DB_HOST, DB_USER, etc.)
+EnvironmentFile=/home/ubuntu/library-system/.env
+
+# Gunicorn start command with 3 workers bound to port 5000
+ExecStart=/home/ubuntu/library-system/venv/bin/gunicorn \
+    --workers 3 \
+    --bind 0.0.0.0:5000 \
+    --access-logfile /var/log/library_access.log \
+    --error-logfile /var/log/library_error.log \
+    app:app
+
+# Restart policy for high availability
+Restart=always
+RestartSec=5
+
+# Sandboxing & security limits
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

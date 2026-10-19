@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Issued Books - Admin{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <h2 class="font-heading mb-1" style="font-size: clamp(1.3rem, 3vw, 1.75rem);">Issued books &amp; circulation records</h2>
+        <p class="text-secondary small mb-0">Monitor active student loans across the college, flag overdue returns, and process book restocks.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-neo-secondary small">
+            <i class="bi bi-speedometer2"></i> Back to dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Status Filter Pills Container -->
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="neo-pills-container">
+        <span class="text-secondary small fw-bold" style="padding: 0 0.4rem;">
+            <i class="bi bi-funnel"></i> Status:
+        </span>
+        <a href="{{ url_for('admin_issued_books', status='all') }}"
+           class="neo-pill-btn {{ 'active' if current_filter == 'all' }}">
+            All records
+        </a>
+        <a href="{{ url_for('admin_issued_books', status='borrowed') }}"
+           class="neo-pill-btn {{ 'active' if current_filter == 'borrowed' }}">
+            <i class="bi bi-book"></i> Active loans
+        </a>
+        <a href="{{ url_for('admin_issued_books', status='overdue') }}"
+           class="neo-pill-btn {{ 'active' if current_filter == 'overdue' }}">
+            <i class="bi bi-exclamation-octagon"></i> Overdue only
+        </a>
+        <a href="{{ url_for('admin_issued_books', status='returned') }}"
+           class="neo-pill-btn {{ 'active' if current_filter == 'returned' }}">
+            <i class="bi bi-check2-all"></i> Returned
+        </a>
+    </div>
+
+    <div>
+        <span class="small text-secondary">
+            Showing <strong>{{ records|length }}</strong> {% if records|length == 1 %}record{% else %}records{% endif %}
+        </span>
+    </div>
+</div>
+
+<!-- Issued Books Table -->
+<div class="table-card">
+    {% if records %}
+        <div class="table-scroll">
+            <table class="neo-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student details</th>
+                        <th>Book title</th>
+                        <th>Issue date</th>
+                        <th>Due date</th>
+                        <th>Return date</th>
+                        <th>Status</th>
+                        <th>Late fee</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in records %}
+                        <tr>
+                            <td class="text-secondary small">#{{ r.id }}</td>
+                            <td>
+                                <div class="fw-bold">{{ r.full_name }}</div>
+                                <div class="text-secondary small">@{{ r.username }} &bull; {{ r.email }}</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold" style="overflow-wrap: anywhere;">{{ r.title }}</div>
+                                <div class="text-secondary small">ISBN: <code>{{ r.isbn }}</code></div>
+                            </td>
+                            <td><small>{{ r.issue_date.strftime('%b %d, %Y') }}</small></td>
+                            <td>
+                                <small class="{{ 'fw-bold' if r.status == 'overdue' else '' }}"
+                                       style="{{ 'color: var(--accent-red);' if r.status == 'overdue' else '' }}">
+                                    {{ r.due_date.strftime('%b %d, %Y') }}
+                                </small>
+                            </td>
+                            <td>
+                                {% if r.return_date %}
+                                    <small><i class="bi bi-check2 text-success me-1"></i>{{ r.return_date.strftime('%b %d, %Y') }}</small>
+                                {% else %}
+                                    <small class="text-secondary fst-italic">Pending return</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if r.status == 'returned' %}
+                                    <span class="neo-chip neo-chip-returned"><span class="neo-chip-dot"></span> Returned</span>
+                                {% elif r.status == 'overdue' %}
+                                    <span class="neo-chip neo-chip-overdue"><span class="neo-chip-dot"></span> Overdue</span>
+                                {% else %}
+                                    <span class="neo-chip neo-chip-borrowed"><span class="neo-chip-dot"></span> Active loan</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if r.fine_amount > 0 %}
+                                    <span class="fw-bold" style="color: var(--accent-red);">Rs {{ "%.2f"|format(r.fine_amount) }}</span>
+                                {% else %}
+                                    <span class="text-secondary small">Rs 0.00</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                {% if r.return_date is none %}
+                                    <form action="{{ url_for('admin_mark_returned', record_id=r.id) }}" method="POST" style="display: inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn-neo-secondary small"
+                                                onclick="return confirm('Mark \'{{ r.title }}\' as returned by {{ r.full_name }}?');">
+                                            <i class="bi bi-check-lg"></i> Mark returned
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="neo-chip small" style="opacity: 0.7;">Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2.5rem 1rem;">
+            <div class="neo-stat-icon-wrapper" style="width: 50px; height: 50px; margin: 0 auto 1rem auto; font-size: 1.35rem;">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <h4 class="font-heading mb-1" style="font-size: 1.25rem;">No circulation records found</h4>
+            <p class="text-secondary small mb-3">No records match the current filter selection.</p>
+            <a href="{{ url_for('admin_issued_books', status='all') }}" class="btn-neo-secondary small">
+                View all circulation records
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome & Action Header -->
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <span class="neo-chip mb-2">
+            <span class="neo-chip-dot" style="background-color: var(--accent-green);"></span>
+            <span>Student account active</span>
+        </span>
+        <h2 class="font-heading mb-1" style="font-size: clamp(1.3rem, 3vw, 1.75rem);">My loans dashboard</h2>
+        <p class="text-secondary small mb-0">Welcome, <strong>{{ session.get('full_name') }}</strong> ({{ session.get('username') }})</p>
+    </div>
+    <div>
+        <a href="{{ url_for('student_books') }}" class="btn-neo-primary">
+            <i class="bi bi-bookmark-plus"></i> Browse &amp; borrow books
+        </a>
+    </div>
+</div>
+
+<!-- Neumorphic Widgets Grid: Date/Time Tile + Stat Tiles -->
+<div class="stat-grid-4">
+    <!-- Live Clock & Date Widget Tile -->
+    <div class="neo-clock-tile">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span class="small text-secondary fw-bold">Current time</span>
+            <i class="bi bi-clock text-secondary"></i>
+        </div>
+        <div id="liveClockTime" class="neo-clock-time">--:--:--</div>
+        <div id="liveClockDate" class="neo-clock-date">Loading date...</div>
+    </div>
+
+    <!-- Active Borrows Tile -->
+    <div class="neo-stat-tile">
+        <div class="neo-stat-header">
+            <span class="neo-stat-label">Active loans</span>
+            <div class="neo-stat-icon-wrapper">
+                <i class="bi bi-book"></i>
+            </div>
+        </div>
+        <div>
+            <div class="neo-stat-value">{{ stats.active_count }}</div>
+            <div class="small text-secondary">Books in possession</div>
+        </div>
+    </div>
+
+    <!-- Overdue Books Tile -->
+    <div class="neo-stat-tile">
+        <div class="neo-stat-header">
+            <span class="neo-stat-label">Overdue loans</span>
+            <div class="neo-stat-icon-wrapper" style="color: var(--accent-red);">
+                <i class="bi bi-exclamation-octagon"></i>
+            </div>
+        </div>
+        <div>
+            <div class="neo-stat-value" style="color: var(--accent-red);">{{ stats.overdue_count }}</div>
+            <div class="small text-secondary">Past 14-day limit</div>
+        </div>
+    </div>
+
+    <!-- Accrued Late Fees Tile -->
+    <div class="neo-stat-tile">
+        <div class="neo-stat-header">
+            <span class="neo-stat-label">Accrued fees</span>
+            <div class="neo-stat-icon-wrapper" style="color: var(--accent-amber);">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+        </div>
+        <div>
+            <div class="neo-stat-value" style="color: var(--accent-amber);">Rs {{ "%.2f"|format(stats.total_fines) }}</div>
+            <div class="small text-secondary">Rs 5.00/day policy</div>
+        </div>
+    </div>
+</div>
+
+<!-- Currently Borrowed Books Section -->
+<div class="table-card">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.6);">
+        <h4 class="font-heading mb-0" style="font-size: 1.15rem;">
+            <i class="bi bi-bookmark-check me-2"></i> Currently borrowed books
+        </h4>
+        <span class="small text-secondary">Standard loan duration: 14 days</span>
+    </div>
+
+    {% if active_borrows %}
+        <div class="table-scroll">
+            <table class="neo-table">
+                <thead>
+                    <tr>
+                        <th>Book title</th>
+                        <th>Category</th>
+                        <th>Issue date</th>
+                        <th>Due date</th>
+                        <th>Status &amp; timeline</th>
+                        <th>Late fee</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in active_borrows %}
+                        <tr>
+                            <td>
+                                <div class="fw-bold" style="overflow-wrap: anywhere;">{{ item.title }}</div>
+                                <div class="text-secondary small">By {{ item.author }} &bull; ISBN: <code>{{ item.isbn }}</code></div>
+                            </td>
+                            <td>
+                                <span class="neo-chip">
+                                    <span class="neo-chip-dot" style="background-color: var(--surface-dark);"></span>
+                                    <span>{{ item.category }}</span>
+                                </span>
+                            </td>
+                            <td>{{ item.issue_date.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                <span class="fw-bold" style="{{ 'color: var(--accent-red);' if item.is_overdue else '' }}">
+                                    {{ item.due_date.strftime('%b %d, %Y') }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if item.is_overdue %}
+                                    <span class="neo-chip neo-chip-overdue">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>Overdue ({{ (item.days_remaining)|abs }} days late)</span>
+                                    </span>
+                                {% elif item.days_remaining == 0 %}
+                                    <span class="neo-chip neo-chip-issued">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>Due today!</span>
+                                    </span>
+                                {% else %}
+                                    <span class="neo-chip neo-chip-borrowed">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>{{ item.days_remaining }} days remaining</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.current_fine > 0 %}
+                                    <span class="fw-bold" style="color: var(--accent-red);">Rs {{ "%.2f"|format(item.current_fine) }}</span>
+                                {% else %}
+                                    <span class="text-secondary small">Rs 0.00</span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <form action="{{ url_for('student_return_book', record_id=item.id) }}" method="POST" style="display: inline;">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn-neo-secondary small"
+                                            onclick="return confirm('Return \'{{ item.title }}\' today?');">
+                                        <i class="bi bi-arrow-return-left"></i> Return book
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div style="text-align: center; padding: 2.5rem 1rem;">
+            <div class="neo-stat-icon-wrapper" style="width: 50px; height: 50px; margin: 0 auto 1rem auto; font-size: 1.35rem;">
+                <i class="bi bi-journal-check"></i>
+            </div>
+            <h4 class="font-heading mb-1" style="font-size: 1.2rem;">No active loans</h4>
+            <p class="text-secondary small mb-3">You do not currently have any books checked out from the library.</p>
+            <a href="{{ url_for('student_books') }}" class="btn-neo-primary small">
+                <i class="bi bi-search"></i> Explore library catalog
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

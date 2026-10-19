@@ -1,0 +1,1036 @@
+/* ==========================================================================
+   CloudLibrary - Premium Neumorphic (Soft-UI) Design System
+   Base Surface: #e6e8ec
+   Typography: Unbounded (Headings) + Manrope (Body)
+   Layout: Fully Responsive, Fluid Sizing, No Clipped Shadows
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Surface Tokens */
+  --surface-base: #e6e8ec;
+  --surface-muted: #dfe2e7;
+  --surface-dark: #22252a;
+  --surface-dark-hover: #2d3036;
+
+  /* Typography Colors */
+  --text-primary: #181a1f;
+  --text-secondary: #636a75;
+  --text-muted: #888f9a;
+  --text-inverse: #f8fafc;
+
+  /* Neumorphic Shadow Tokens */
+  --shadow-light: #ffffff;
+  --shadow-dark: #c5c8ce;
+  --shadow-dark-deep: #b8bcc3;
+
+  /* Raised Outer Shadows */
+  --neo-raised-sm: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+  --neo-raised: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light);
+  --neo-raised-lg: 14px 14px 28px var(--shadow-dark), -14px -14px 28px var(--shadow-light);
+  --neo-raised-hover: 10px 10px 22px var(--shadow-dark), -10px -10px 22px var(--shadow-light);
+
+  /* Pressed / Inset Shadows */
+  --neo-inset-sm: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+  --neo-inset: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  --neo-inset-deep: inset 6px 6px 12px var(--shadow-dark-deep), inset -6px -6px 12px var(--shadow-light);
+
+  /* Dark Button Shadows */
+  --neo-dark-raised: 6px 6px 14px rgba(24, 26, 31, 0.28), -4px -4px 10px rgba(255, 255, 255, 0.8);
+  --neo-dark-pressed: inset 3px 3px 6px #131518, inset -2px -2px 5px rgba(255, 255, 255, 0.12);
+
+  /* Semantic Accent Colors */
+  --accent-green: #10b981;
+  --accent-green-bg: rgba(16, 185, 129, 0.12);
+  --accent-amber: #f59e0b;
+  --accent-amber-bg: rgba(245, 158, 11, 0.12);
+  --accent-red: #ef4444;
+  --accent-red-bg: rgba(239, 68, 68, 0.12);
+  --accent-blue: #3b82f6;
+  --accent-blue-bg: rgba(59, 130, 246, 0.12);
+
+  /* Radii */
+  --radius-card: 28px;
+  --radius-card-sm: 20px;
+  --radius-pill: 9999px;
+  --radius-input: 9999px;
+
+  /* Typography Families */
+  --font-heading: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Base Reset & Body
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Headings with Fluid Clamp & Sentence Case */
+h1, h2, h3, h4, h5, h6,
+.font-heading {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  text-transform: none; /* sentence case */
+  margin-top: 0;
+  overflow-wrap: break-word;
+}
+
+h1 { font-size: clamp(1.75rem, 4vw, 2.35rem); line-height: 1.25; }
+h2 { font-size: clamp(1.4rem, 3vw, 1.85rem); line-height: 1.3; }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem); line-height: 1.35; }
+h4 { font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.4; }
+h5 { font-size: 1rem; line-height: 1.45; }
+h6 { font-size: 0.9rem; line-height: 1.5; }
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--surface-dark);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* Accessible Keyboard Focus */
+:focus-visible {
+  outline: 2px solid var(--surface-dark);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Reusable Layout Utilities (No Clipped Shadows)
+   ========================================================================== */
+.page-container {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
+}
+
+/* Auth Cards (Login & Register - Fluid 440-520px Width) */
+.auth-card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: clamp(1rem, 3vw, 2.5rem) 0;
+}
+
+.auth-card {
+  width: min(100%, 480px);
+  margin: 0 auto;
+}
+
+.auth-card-wide {
+  width: min(100%, 540px);
+  margin: 0 auto;
+}
+
+.form-card-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: clamp(1rem, 3vw, 2rem) 0;
+}
+
+.form-card {
+  width: min(100%, 720px);
+  margin: 0 auto;
+}
+
+/* Responsive Button Rows & Grid */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-row-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.btn-row-grid > * {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* Responsive Content Grids */
+.stat-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.split-grid-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 991px) {
+  .split-grid-2-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* ==========================================================================
+   Navigation Bar (Floating Neumorphic Pill + Responsive Mobile Toggle)
+   ========================================================================== */
+.neo-navbar-wrapper {
+  padding: 1.25rem 0 0.5rem 0;
+}
+
+.neo-navbar {
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-raised);
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  position: relative;
+}
+
+.neo-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.neo-brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-dark);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: var(--neo-dark-raised);
+  flex-shrink: 0;
+}
+
+/* Mobile Toggle Button */
+.neo-nav-toggle {
+  display: none;
+  background: var(--surface-base);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--neo-raised-sm);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.neo-nav-toggle:active {
+  box-shadow: var(--neo-inset-sm);
+}
+
+.neo-nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.neo-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.neo-nav-link {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+  min-height: 40px;
+}
+
+.neo-nav-link:hover {
+  color: var(--text-primary);
+  box-shadow: var(--neo-raised-sm);
+  background: var(--surface-base);
+}
+
+.neo-nav-link.active {
+  color: var(--text-primary);
+  box-shadow: var(--neo-inset-sm);
+  background: var(--surface-base);
+}
+
+.neo-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  white-space: nowrap;
+}
+
+/* Mobile Navigation Breakpoint */
+@media (max-width: 991px) {
+  .neo-navbar {
+    border-radius: 24px;
+    flex-wrap: wrap;
+    padding: 0.75rem 1.25rem;
+  }
+  .neo-nav-toggle {
+    display: inline-flex;
+  }
+  .neo-nav-menu {
+    display: none;
+    width: 100%;
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  .neo-nav-menu.show {
+    display: flex;
+  }
+  .neo-nav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+  .neo-nav-link {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.65rem 1.25rem;
+  }
+  .neo-nav-user {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding-top: 0.5rem;
+  }
+  .neo-nav-user .btn-neo-secondary,
+  .neo-nav-user .btn-neo-primary,
+  .neo-nav-user .neo-chip {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   Buttons (Graphite Primary & Raised Secondary Pills)
+   ========================================================================== */
+.btn-neo-primary {
+  background-color: var(--surface-dark);
+  color: #ffffff !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--neo-dark-raised);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 44px; /* Accessible touch target */
+}
+
+.btn-neo-primary:hover {
+  background-color: var(--surface-dark-hover);
+  transform: translateY(-1px);
+  color: #ffffff !important;
+}
+
+.btn-neo-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--neo-dark-pressed);
+}
+
+.btn-neo-secondary {
+  background-color: var(--surface-base);
+  color: var(--text-primary) !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  box-shadow: var(--neo-raised-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.btn-neo-secondary:hover {
+  box-shadow: var(--neo-raised);
+  color: var(--text-primary) !important;
+  transform: translateY(-1px);
+}
+
+.btn-neo-secondary:active,
+.btn-neo-secondary.active {
+  box-shadow: var(--neo-inset-sm);
+  transform: translateY(0);
+}
+
+.btn-neo-danger {
+  background-color: var(--surface-base);
+  color: var(--accent-red) !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--neo-raised-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.btn-neo-danger:hover {
+  box-shadow: var(--neo-raised);
+  background-color: #fee2e2;
+}
+
+.btn-neo-danger:active {
+  box-shadow: var(--neo-inset-sm);
+}
+
+.btn-neo-secondary.small,
+.btn-neo-primary.small,
+.btn-neo-danger.small {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.84rem;
+  min-height: 40px;
+}
+
+/* ==========================================================================
+   Cards & Surfaces (Unclipped Shadows with Room to Breathe)
+   ========================================================================== */
+.neo-card {
+  background-color: var(--surface-base);
+  border-radius: var(--radius-card);
+  box-shadow: var(--neo-raised);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  position: relative;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  margin-bottom: 1.5rem;
+  /* Crucial: DO NOT add overflow: hidden here as it clips neumorphic shadows! */
+}
+
+.neo-card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--neo-raised-hover);
+}
+
+.neo-card-inset {
+  background-color: var(--surface-base);
+  border-radius: var(--radius-card-sm);
+  box-shadow: var(--neo-inset);
+  padding: clamp(1rem, 2.5vw, 1.35rem);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Demo Credentials Clean List */
+.demo-cred-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.demo-cred-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.demo-cred-role {
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Form Fields (Carved-in Look, Accessible >= 16px Font & >= 44px Height)
+   ========================================================================== */
+.neo-input-wrapper {
+  margin-bottom: 1.15rem;
+}
+
+.neo-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  margin-left: 0.75rem;
+  text-transform: none;
+}
+
+.neo-input,
+.neo-select,
+.neo-textarea {
+  width: 100%;
+  background-color: var(--surface-base);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--neo-inset);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem; /* 16px prevents mobile auto-zoom on iOS */
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-input);
+  outline: none;
+  min-height: 48px; /* Accessible touch target */
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.neo-textarea {
+  border-radius: var(--radius-card-sm);
+  resize: vertical;
+  min-height: 110px;
+}
+
+.neo-input:focus,
+.neo-select:focus,
+.neo-textarea:focus {
+  box-shadow: var(--neo-inset-deep);
+  border-color: rgba(34, 37, 42, 0.3);
+}
+
+.neo-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Search Bar (Responsive Inset Pill) */
+.neo-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-inset);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.5rem 0.35rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  gap: 0.65rem;
+  min-height: 52px;
+}
+
+.neo-search-bar input {
+  flex: 1;
+  min-width: 0; /* Prevents overflow in flexbox */
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.neo-search-bar input::placeholder {
+  color: var(--text-muted);
+}
+
+@media (max-width: 540px) {
+  .neo-search-bar {
+    border-radius: 20px;
+    flex-wrap: wrap;
+    padding: 0.75rem;
+  }
+  .neo-search-bar input {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .neo-search-bar button,
+  .neo-search-bar a {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   Filter Pills & Segmented Tabs
+   ========================================================================== */
+.neo-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-inset-sm);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.neo-pill-btn {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.neo-pill-btn:hover {
+  color: var(--text-primary);
+}
+
+.neo-pill-btn.active {
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-inset);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Status Chips (Inset Pill with Dot + Text)
+   ========================================================================== */
+.neo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.95rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-inset-sm);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.neo-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.neo-chip-available {
+  color: #065f46;
+}
+.neo-chip-available .neo-chip-dot {
+  background-color: var(--accent-green);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.neo-chip-issued,
+.neo-chip-borrowed {
+  color: #92400e;
+}
+.neo-chip-issued .neo-chip-dot,
+.neo-chip-borrowed .neo-chip-dot {
+  background-color: var(--accent-amber);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.neo-chip-overdue {
+  color: #991b1b;
+}
+.neo-chip-overdue .neo-chip-dot {
+  background-color: var(--accent-red);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+}
+
+.neo-chip-returned {
+  color: #1e3a8a;
+}
+.neo-chip-returned .neo-chip-dot {
+  background-color: var(--accent-blue);
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+}
+
+.neo-chip-out-of-stock {
+  color: #7f1d1d;
+}
+.neo-chip-out-of-stock .neo-chip-dot {
+  background-color: #991b1b;
+}
+
+/* ==========================================================================
+   Stat Widgets (Date/Time tile, Circular dial, Stat cards)
+   ========================================================================== */
+.neo-stat-tile {
+  background-color: var(--surface-base);
+  border-radius: var(--radius-card);
+  box-shadow: var(--neo-raised);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+}
+
+.neo-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.neo-stat-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-raised-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.neo-stat-value {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.neo-stat-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Dial Progress Widget (Circular Meter) */
+.neo-dial-widget {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.neo-dial-svg {
+  width: 86px;
+  height: 86px;
+  transform: rotate(-90deg);
+  flex-shrink: 0;
+}
+
+.neo-dial-track {
+  fill: none;
+  stroke: var(--shadow-dark);
+  stroke-width: 9;
+}
+
+.neo-dial-fill {
+  fill: none;
+  stroke: var(--surface-dark);
+  stroke-width: 9;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+/* Date / Live Clock Tile */
+.neo-clock-tile {
+  background: var(--surface-base);
+  border-radius: var(--radius-card);
+  box-shadow: var(--neo-raised);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 140px;
+}
+
+.neo-clock-time {
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.neo-clock-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   Tables & Responsive Table Wrapper (No Clipped Shadows, No Page Scroll)
+   ========================================================================== */
+.table-card {
+  background-color: var(--surface-base);
+  border-radius: var(--radius-card);
+  box-shadow: var(--neo-raised);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  margin-bottom: 1.5rem;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.35rem; /* Room for row outer shadows */
+}
+
+.neo-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+  margin: 0;
+  min-width: 600px; /* Ensures readable columns inside the scrollable container */
+}
+
+.neo-table th {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1.15rem;
+  text-align: left;
+  border: none;
+  white-space: nowrap;
+}
+
+.neo-table tbody tr {
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-raised-sm);
+  border-radius: 16px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.neo-table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--neo-raised);
+}
+
+.neo-table td {
+  padding: 0.95rem 1.15rem;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  border: none;
+  vertical-align: middle;
+}
+
+.neo-table td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.neo-table td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* ==========================================================================
+   Alerts & Notifications
+   ========================================================================== */
+.neo-alert {
+  background-color: var(--surface-base);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--neo-raised-sm);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0.85rem 1.4rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.neo-alert-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.neo-alert-success { color: #065f46; }
+.neo-alert-danger { color: #991b1b; }
+.neo-alert-warning { color: #92400e; }
+.neo-alert-info { color: #1e40af; }
+
+.neo-alert-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.neo-footer {
+  margin-top: 4rem;
+  padding: 2.5rem 0 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.neo-footer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--surface-base);
+  box-shadow: var(--neo-inset-sm);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Accessibility & Reduced Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Manage Books - Admin{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem;">
+    <div>
+        <h2 class="font-heading mb-1" style="font-size: clamp(1.3rem, 3vw, 1.75rem);">Book inventory manager</h2>
+        <p class="text-secondary small mb-0">Publish new titles, edit textbook metadata, manage stock quantities, and remove obsolete records.</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin_add_book') }}" class="btn-neo-primary">
+            <i class="bi bi-plus-lg"></i> Add new book
+        </a>
+    </div>
+</div>
+
+<!-- Search & Filter Card -->
+<div class="neo-card mb-4" style="padding: 1.25rem;">
+    <form action="{{ url_for('admin_books') }}" method="GET">
+        <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 0.75rem; align-items: center;">
+            <div>
+                <div class="neo-search-bar">
+                    <i class="bi bi-search text-secondary" style="flex-shrink: 0;"></i>
+                    <input type="text" name="search" placeholder="Search by title, author, or ISBN..."
+                           value="{{ search }}" aria-label="Search">
+                </div>
+            </div>
+            <div>
+                <select name="category" class="neo-select" onchange="this.form.submit()" aria-label="Category Filter">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat }}" {{ 'selected' if selected_category == cat }}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="btn-row" style="flex-wrap: nowrap;">
+                <button type="submit" class="btn-neo-primary" style="padding: 0.65rem 1.25rem;">Filter</button>
+                {% if search or selected_category %}
+                    <a href="{{ url_for('admin_books') }}" class="btn-neo-secondary small" title="Reset">Reset</a>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Books Management Table -->
+<div class="table-card">
+    {% if books %}
+        <div class="table-scroll">
+            <table class="neo-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Book title &amp; author</th>
+                        <th>Category</th>
+                        <th>ISBN</th>
+                        <th>Total copies</th>
+                        <th>Available</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <td class="text-secondary small">#{{ book.id }}</td>
+                            <td>
+                                <div class="fw-bold" style="overflow-wrap: anywhere;">{{ book.title }}</div>
+                                <div class="text-secondary small">By {{ book.author }}</div>
+                            </td>
+                            <td>
+                                <span class="neo-chip">
+                                    <span class="neo-chip-dot" style="background-color: var(--surface-dark);"></span>
+                                    <span>{{ book.category }}</span>
+                                </span>
+                            </td>
+                            <td><code style="background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px;">{{ book.isbn }}</code></td>
+                            <td><strong>{{ book.total_copies }}</strong></td>
+                            <td>
+                                {% if book.available_copies > 0 %}
+                                    <span class="neo-chip neo-chip-available">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>{{ book.available_copies }} in stock</span>
+                                    </span>
+                                {% else %}
+                                    <span class="neo-chip neo-chip-out-of-stock">
+                                        <span class="neo-chip-dot"></span>
+                                        <span>0 available</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="btn-row" style="justify-content: flex-end; flex-wrap: nowrap;">
+                                    <a href="{{ url_for('admin_edit_book', book_id=book.id) }}"
+                                       class="btn-neo-secondary small" title="Edit book details">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form action="{{ url_for('admin_delete_book', book_id=book.id) }}" method="POST" style="display: inline;">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn-neo-danger small"
+                                                onclick="return confirm('Are you sure you want to delete \'{{ book.title }}\'? This cannot be undone.');"
+                                                title="Delete book">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 2.5rem 1rem;">
+            <div class="neo-stat-icon-wrapper" style="width: 50px; height: 50px; margin: 0 auto 1rem auto; font-size: 1.35rem;">
+                <i class="bi bi-journal-x"></i>
+            </div>
+            <h4 class="font-heading mb-1" style="font-size: 1.25rem;">No books in inventory</h4>
+            <p class="text-secondary small mb-3">Add textbooks to your library catalog to begin tracking circulation.</p>
+            <a href="{{ url_for('admin_add_book') }}" class="btn-neo-primary small">
+                <i class="bi bi-plus-lg"></i> Add first book
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

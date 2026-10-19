@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Internal Server Error (500){% endblock %}
+
+{% block content %}
+<div class="auth-card-wrapper">
+    <div class="neo-card auth-card" style="text-align: center; padding: 3rem 2rem;">
+        <div class="font-heading mb-2" style="font-size: clamp(3rem, 8vw, 4.5rem); color: var(--accent-red); line-height: 1;">500</div>
+        <h3 class="font-heading mb-2" style="font-size: clamp(1.25rem, 3vw, 1.6rem);">Internal server error</h3>
+        <p class="text-secondary small mb-4">
+            The application server encountered an unexpected error.
+            Please try again shortly or contact system administration.
+        </p>
+        {% if error %}
+            <div class="neo-card-inset mb-4 text-start" style="padding: 1rem;">
+                <code class="small text-danger" style="word-break: break-all;">{{ error }}</code>
+            </div>
+        {% endif %}
+        <div>
+            <a href="{{ url_for('index') }}" class="btn-neo-primary">
+                <i class="bi bi-house-door"></i> Back to catalog
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
