@@ -366,27 +366,27 @@ def student_required(f):
 # ==========================================================
 @app.route('/health', methods=['GET'])
 def health_check():
-    """
-    AWS Application Load Balancer health check endpoint.
-    Returns HTTP 200 and checks DB connectivity without requiring login.
-    """
-    db_status = "connected"
-    engine_used = ACTIVE_DB_ENGINE
     try:
         conn = get_db_connection()
         with conn.cursor() as cursor:
-            cursor.execute("SELECT 1")
+            cursor.execute("SELECT 1 FROM users LIMIT 1")
         conn.close()
-    except Exception as e:
-        db_status = f"disconnected: {str(e)}"
 
-    return jsonify({
-        "status": "healthy",
-        "service": "Library Management System",
-        "database": db_status,
-        "engine": engine_used,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
-    }), 200
+        return jsonify({
+            "status": "healthy",
+            "service": "Library Management System",
+            "database": "connected",
+            "engine": ACTIVE_DB_ENGINE,
+            "timestamp": datetime.utcnow().isoformat() + "Z"
+        }), 200
+    except Exception:
+        return jsonify({
+            "status": "unhealthy",
+            "service": "Library Management System",
+            "database": "disconnected",
+            "engine": ACTIVE_DB_ENGINE,
+            "timestamp": datetime.utcnow().isoformat() + "Z"
+        }), 503
 
 
 # ==========================================================
